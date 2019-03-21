@@ -1,0 +1,134 @@
+<div  id="route-list" class="table-group" style="background: #fff;">
+    <img src="./images/TreeButtonUp.gif"
+         style=" padding-top: 5px;padding-left: 10px;"
+          (click)="isExpand_v = !isExpand_v"
+          *ngIf="!isExpand_v"/>
+  <table cellpadding="0" class="Table Fixed" cellspacing="0" width="100%"  [style.display]="isExpand_v ? '':'none'" >
+        <thead>
+        <tr>
+          <th class="Parent"><img src="./images/TreeButtonDown.gif" (click)="isExpand_v = !isExpand_v"/></th>
+          <th class="Parent"></th>
+          <th  class="Parent"></th>
+          <th class="Parent"></th>
+          <ng-container
+                  *ngFor="let customColumn of (rootData.routeInfos ? rootData.routeInfos[0].customColumns: []);let i = index">
+            <th
+                    [style.display]="rootData.isShowTimeline ?'none':''"
+                    [style.text-align]="i<5 ? 'left' : 'right'"
+                    [ngStyle]="customColumn.field == 'Stops' ? {'white-space': 'normal','width': '72px','min-width':'72px','max-width':'72px'}:''"
+                    *ngIf="customColumn.isShowInRouteSummary"
+                    class="Parent"
+            >
+              {{customColumn.displayText}}
+            </th>
+          </ng-container>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let route of rootData.routeInfos;">
+          <td>
+            <input type="checkbox"  [ngModel]="route.isSelected" (click)="showOrHideRouteInfo(route)">
+          </td>
+          <td (click)="hideOrShowRouteOnMapHandler(route)"><i [ngClass]="{true:'fa fa-eye',false:'fa fa-eye-slash'}[route.isShowOnMap]" ></i></td>
+          <td (click)="addScheduledEvents(route)" title="{{'Add Scheduled Events'}}"><i class="fa fa-plus-circle"></i></td>
+          <td (click)="deletePlanHandler(route.id)" title="{{'Delete Plan'}}"><i class="fa fa-times"></i></td>
+          <ng-container *ngFor="let customColumn of route.customColumns;trackBy: trackByCustomColumns;let i = index">
+            <td style="text-align: left;" [ngSwitch]="rootData.isShowMoveToThisLoadSheet" *ngIf="i==0&&route.customColumns[0].isShowInRouteSummary">
+              <p style="text-align: left;"  *ngSwitchCase=false>{{route.routeName}}</p>
+
+              <a *ngSwitchCase=true style="color: #3d5f7a;cursor: pointer;" (click)="MoveToThisLoadSheet(route)">{{route.routeName}}</a>
+            </td>
+            <td *ngIf="i==1&&route.customColumns[1].isShowInRouteSummary">{{customColumn.value}}</td>
+            <td style="text-align: left;" *ngIf="i==2&&route.customColumns[2].isShowInRouteSummary">
+              <ng-select
+                      [items]="colors"
+                      bindLabel="label"
+                      bindValue="value"
+                      [(ngModel)]="route.color"
+                      style="width: 150px !important;"
+                      [dropdownPosition]="'down'"
+                      [ngStyle]="{color: '#'+route.color}"
+                      (change)="changeRouteColorHandler(route)"
+                      (open)="onFocus($event)"
+                      (close)="onBlur($event)"
+              >
+                <ng-template ng-label-tmp let-item="item">
+                     <span [ngStyle]="{background: '#'+item.value}"
+                           style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                  <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item" >
+                <span [ngStyle]="{background: '#'+item.value}"
+                      style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                  <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+                </ng-template>
+
+              </ng-select>
+
+            </td>
+            <td style="text-align: left;" *ngIf="i==3&&route.customColumns[3].isShowInRouteSummary">
+              <ng-select
+                      bindLabel="label"
+                      bindValue="value"
+                      [items]="deliverymanBuffer"
+                      style="width: 140px !important;"
+                      [dropdownPosition]="'down'"
+                      [(ngModel)]="route.deliveryman"
+                      [typeahead]="deliverymanTypeahead"
+                      (open)="onFocus($event)"
+                      (close)="onBlur($event)"
+              >
+              </ng-select>
+            </td>
+            <td style="text-align: left;" *ngIf="i==4&&route.customColumns[4].isShowInRouteSummary">
+              <ng-select
+                      [items]="vehicleBuffer"
+                      bindLabel="label"
+                      bindValue="value"
+                      [dropdownPosition]="'down'"
+                      style="width: 140px !important;"
+                      [disabled] ="route.isEditVehicle"
+                      [(ngModel)]="route.vehicleID"
+                      [typeahead]="vehicleTypeahead"
+                      (open)="onFocus($event)"
+                      (close)="onBlur($event)"
+              >
+              </ng-select>
+            </td>
+            <td style="text-align: right;" *ngIf="customColumn.type == 'text' && customColumn.isShowInRouteSummary">
+              {{ customColumn.value }}
+            </td>
+          </ng-container>
+        </tr>
+        <tr>
+          <td><img src="./images/TreeButtonDown.gif"  (click)="isExpand_v = !isExpand_v"/></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[0]: []:[]).isShowInRouteSummary"></td>
+          <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[1]: []:[]).isShowInRouteSummary"></td>
+          <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[2]: []:[]).isShowInRouteSummary"></td>
+          <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[3]: []:[]).isShowInRouteSummary"></td>
+          <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[4]: []:[]).isShowInRouteSummary"></td>
+
+
+          <ng-container *ngFor="let sumOfCustomColumn of rootData.sumOfCustomColumns;let i = index;">
+            <td
+                    style="text-align: right;"
+                    *ngIf="rootData.routeInfos[0].customColumns[i+5].isShowInRouteSummary"
+            >
+              {{ sumOfCustomColumn.value }}
+            </td>
+          </ng-container>
+
+        </tr>
+        </tbody>
+      </table>
+
+  <style>
+    .SelectField:not(.MultiSelect):after{
+      display: none !important;
+    }
+  </style>
+</div>

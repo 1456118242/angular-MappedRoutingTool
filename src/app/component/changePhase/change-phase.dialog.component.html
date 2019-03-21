@@ -1,0 +1,37 @@
+<div class="">
+    <div
+            class="vex-close ng-star-inserted"
+            (click)="closeDialog()"
+    >
+
+    </div>
+    <p class="title">
+        {{"Change Activity"}}
+    </p>
+    <table>
+        <thead>
+        <th>Stop</th>
+        <th>Phase</th>
+        <th>Change To</th>
+        </thead>
+        <tr>
+            <td>{{stopInfo.id}}</td>
+            <td>{{stopInfo.phase | phaseFormat}}</td>
+            <td>
+                <select [(ngModel)]="phase">
+                    <option [ngValue]="phaseList.all.value"  >{{phaseList.all.text}}</option>
+                    <option [ngValue]="phaseList.oneAndThree.value"  >{{phaseList.oneAndThree.text}}</option>
+                    <option [ngValue]="phaseList.twoAndFour.value"  >{{phaseList.twoAndFour.text}}</option>
+                    <option [ngValue]="phaseList.oneOnly.value"  >{{phaseList.oneOnly.text}}</option>
+                    <option [ngValue]="phaseList.twoOnly.value"  >{{phaseList.twoOnly.text}}</option>
+                    <option [ngValue]="phaseList.threeOnly.value"  >{{phaseList.threeOnly.text}}</option>
+                    <option [ngValue]="phaseList.fourOnly.value"  >{{phaseList.fourOnly.text}}</option>
+                </select>
+            </td>
+
+        </tr>
+    </table>
+    <div class="btn-check text-right">
+        <button class="ews-dialog-button" (click)="changePhase()">OK</button>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<div class="select-routes-dialog">
+   <style>
+
+   </style>
+    <p class="title">Select Other Routes</p>
+    <div class="list-box">
+        <p>Route Version</p>
+        <ul class="list-box-content">
+            <li *ngFor="let routeVersionObj of routeVersionObjList ">
+                <label>
+                    <input name="route"  [checked]="routeVersionObj.isChecked"
+                           type="radio" (click)="changeShowRouteList(routeVersionObj)" /> {{routeVersionObj.routeVersionDescription}}
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div class="list-box">
+        <p>Route Name</p>
+        <ul class="list-box-content">
+            <li *ngFor="let route of showRouteList">
+                <label>
+                    <input name="route" [(ngModel)]="route.thisRouteSelected" type="checkbox" /> {{route.Route}}
+                </label>
+            </li>
+        </ul>
+    </div>
+   
+    <div class="btn-check text-right">
+        <button class=" btn btn-save" (click)="combineSelectRouteAction()">Add</button>
+        <button class="btn btn-cancel" (click)="closeThisDialog()">{{"Cancel"}}</button>
+    </div>
+</div>

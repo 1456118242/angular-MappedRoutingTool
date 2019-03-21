@@ -1,0 +1,12 @@
+<div class="geocode-dialog">
+    <div class="vex-close" (click)="closeThisDialog()"></div>
+    <p>Edit Customer Geocode</p>
+    <div>
+        <input id="pac-input" class="controls" type="text" placeholder="Search Box" value="{{inputValue}}">
+        <div class="btn-control">
+            <button id="geocode-search"  class="ews-dialog-button" (click)="codeAddress(null)">Search</button>
+            <button id="geocode-save"  class="ews-dialog-button" (click)="saveLatLng()">Save</button>
+        </div>
+    </div>
+    <div id="geocede-map" style="height:300px"></div>
+</div>

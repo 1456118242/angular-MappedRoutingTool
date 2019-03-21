@@ -1,0 +1,22 @@
+<div class="btn-group" id="btn-group">
+  <button (click)="backOptimizerHandler()">{{"Optimizer" }}</button>
+  <div class="SelectField">
+    <select  name="Columns" id="Columns" class="full-width"   (ngModelChange)="saveOptionHandler($event)" [ngModel]="isSaveLoadSheetAndRoute">
+      <option [ngValue]=false>{{"Save Changes to Current Load Sheet Only" }}</option>
+      <option [ngValue]=true>{{"Save Changes to Load Sheet and Route"}}</option>
+    </select>
+  </div>
+  <button (click)="saveChangesHandler()">{{"Save Changes"}}</button>
+  <button  (click)="openOptimizeRoute()">{{"Optimize Routes"}}</button>
+  <button  (click)="clickaotoRoute()" class="">
+    <input type="checkbox" id="autoRoute" (change)="selectAutoRouteHandler($event)"  [ngModel]="isAutoRoute" >{{"Auto-Route"}}
+  </button>
+  <button (click)="printHandler()">{{"Print"}}</button>
+  <button (click)="printSummaryHandler()">{{"Print Summary"}}</button>
+  <button (click)="showTimelineHandler();">{{  isShowTimeline ? "Hide Timeline" : "Show Timeline"}}</button>
+  <button (click)="showLoadSheetAdd()">{{"Add Load Sheet"}}</button>
+  <button (click)="createZeroInvoiceEventsHandler()">{{"Create Events for 0 Sales Stops"}}</button>
+  <button (click)="openMapView()" >{{IsMultiWidow?'Single-Window':'Multi-Window'}}</button>
+  <button (click)="selectRoutes()">{{'Select Routes'}}</button>
+  <button (click)="selectColumns()">{{'Select Columns'}}</button>
+</div>

@@ -1,0 +1,52 @@
+<div class="showloadsheetadddialog">
+    <p class="title">
+        {{"Add Scheduled Stops"}}
+    </p>
+    <div
+            class="vex-close ng-star-inserted"
+            (click)="closeDialog()"
+    >
+    </div>
+
+        <div>
+            <ng-select
+                    placeholder="Customer"
+                    style="display: inline-block;width: 300px"
+                    [items]="routeNames"
+                    bindLabel="CustomerNumCompany"
+                    bindValue="CustomerID"
+                    [addTag]="true"
+                    [loading]="routeNamesLoading"
+                    dropdownPosition="bottom"
+                    [typeahead]="routeNamesTypeahead"
+                    (change)="selectedName($event)"
+            >
+
+            </ng-select>
+            <div style="width: 13%;display: inline-block;vertical-align: text-bottom;" class="btn-check">
+                <button id="search" (click)="searchCustomerInfo()">Search</button>
+            </div>
+        </div>
+    <table *ngIf="customerInfo.isShow">
+        <thead>
+        <th style="text-align: center">Short Name</th>
+        <th style="text-align: center">Company</th>
+        <th style="text-align: center">Customer Num</th>
+        <th style="text-align: center">Address</th>
+        <th style="text-align: center">City</th>
+        </thead>
+        <tr>
+            <td style="text-align: left">{{customerInfo["UserName"]}}</td>
+            <td style="text-align: left">{{customerInfo["Company"]}}</td>
+            <td style="text-align: right">{{customerInfo["CustomerNum"]}}</td>
+            <td style="text-align: left">{{customerInfo["Address"]}}</td>
+            <td style="text-align: left">{{customerInfo["City"]}}</td>
+        </tr>
+    </table>
+    <p *ngIf="customerInfo['isNotFound']">
+        No Customers Were Found
+    </p>
+    <div class="btn-check text-right">
+        <button class="ews-dialog-button" *ngIf="customerInfo.isShow" (click)="addCustomer(customerInfo)">Add</button>
+    </div>
+</div>

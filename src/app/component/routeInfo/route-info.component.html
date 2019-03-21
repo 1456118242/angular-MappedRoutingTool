@@ -1,0 +1,127 @@
+<div [ngClass]="['routelist-wrapper']" (click)="routeInfoClickHandler()">
+    <img [src]="routeInfo.isSelected?'./images/TreeButtonDown.gif':'./images/TreeButtonUp.gif'"
+         class="external"
+          (click)="toggleRouteInfo()"
+          title="{{routeInfo.routeName}}"
+    />
+
+
+  <div [ngClass]="['routelist']" [style.display]="routeInfo.isSelected?'':'none'">
+
+    <h5 [ngStyle]="{color: '#'+routeInfo.color}" #toolForPlan>{{routeInfo.routeName}} {{routeInfo.planDate}} </h5>
+    <h5 [ngStyle]="{color: '#'+routeInfo.color}" #tool #routePlanner>{{routeInfo.routeName}} </h5>
+    <h5 [ngClass]="['best-fit-h5']"
+        [ngStyle]="{'border-bottom': '1px solid black', 'border-top': '1px solid black'}"
+        dndDropzone
+        dndEffectAllowed="copyMove"
+        [dndHorizontal]="false"
+        (dndDrop)="onDropBestFitCallback($event, routeInfo)" #tool>
+      <p [ngClass]="['best-fit-text']">Drag Stop to Sequence by Best Fit</p>
+    </h5>
+
+    <div [ngClass]="['list-btn', 'clearfix']">
+
+      <drop-down-menu #reSequenceDropDownMenu
+        [dropDownMenuTemplate]="reSequenceDropDownMenuTemplate_v"
+      (onClick)="onReSequenceClickHandler($event)"
+      (onSelectItem)="onSelectReSequenceClickHandler($event)">
+      </drop-down-menu>
+
+      <span #tool #routePlanner *ngIf="linearUnitOfMeasure == '1'" [ngClass]="['route-name']">{{displayColumn("totalDistance")}} miles - {{displayColumn("travelTime")}}</span>
+      <span #tool #routePlanner *ngIf="linearUnitOfMeasure == '2'" [ngClass]="['route-name']">{{displayColumn("totalDistance")}} km - {{displayColumn("travelTime")}}</span>
+      <span #toolForPlan [ngClass]="['route-name']">{{displayColumn("totalDistance")}} miles - {{displayColumn("travelTime")}}</span>
+
+      <drop-down-menu #columnDropDownMenu #tool #routePlanner
+        [dropDownMenuTemplate]="columnOptionDropDownMenuTemplate"
+        (onSelectItem)="onSelectColumnClickHandler($event)">
+      </drop-down-menu>
+    </div>
+
+
+    <div [ngClass]="['table-view']">
+      <div [ngClass]="['table-head']">
+        <span [ngClass]="['time']">{{"Total"}}</span>
+        <span [ngClass]="['title']"></span>
+        <span
+          *ngFor="let column of showColumnGroupArray"
+          [ngStyle]="{'text-align': 'right'}"
+          title="{{column}}">
+          {{displayColumn(column)}}
+        </span>
+
+        <span #routePlanner style="text-align: right;"></span>
+        <span #routePlanner style="text-align: right;"></span>
+      </div>
+
+      <div [ngClass]="['table-start']">
+        <div [ngSwitch]="isShowEditStartTime_v"  [ngStyle]="{'display': 'inline'}" [ngClass]="['time-edit-wrapper']">
+        <span *ngSwitchCase="false"
+              [ngStyle]="{'cursor': 'pointer'}"
+              title="Change Start Time" (click)="isShowEditStartTime_v=true;$event.stopPropagation();"
+              class="time"
+              onmouseover="this.style.backgroundColor='#8588DA'" onmouseout="this.style.backgroundColor='#FFF'">{{routeInfo.startTime}}</span>
+
+        <span *ngSwitchCase="true" [ngClass]="['time-input']">
+          <input type="text" [ngModel]="editStartTimeText_v" (click)="$event.stopPropagation();">
+          <i (click)="saveStartTimeHandler($event, routeInfo)" [ngClass]="['fa', 'fa-floppy-o']"></i>
+        </span>
+        </div>
+
+        <span [ngClass]="['title']"><i [ngClass]="['point']"></i>{{"Start Point"}}
+          <i [ngClass]="['fa', 'fa-pencil-square-o']"
+             alt="Change Start Point"
+             (click)="changeStartPoint(routeInfo,0)"
+          ></i>
+        </span>
+        <span #routePlanner style="text-align: right;" *ngFor="let column of showColumnGroupArray"></span>
+        <span></span>
+        <span style="text-align: right;" #routePlanner>distance</span>
+      </div>
+      <div [ngClass]="['table-stops', 'dndList']"
+           [dndDropzone]="routeInfo.allowedActivities"
+           dndEffectAllowed="copyMove"
+           [dndHorizontal]="false"
+           (dndDrop)="onDrop($event, routeInfo)">
+
+        <div [ngClass]="['dndPlaceholder']"
+             dndPlaceholderRef>
+        </div>
+        <div cusotmerInfo
+             [dndType]="stopInfo.activityTypeText"
+             (geocodeStop)="geocodeStop($event)"
+             (onDeletePlan)="deletePlan($event)"
+             (moveInvoice)="moveInvoice($event)"
+             (onClickCustomerInfo)="clickCustomerInfo($event)"
+             *ngFor="let stopInfo of routeInfo.stopInfos; trackBy: trackByStopInfo;"
+                       [customerInfo]="stopInfo"
+             [routeInfo]="routeInfo"
+             id='{{stopInfo.id}}'
+             [showColumnGroupArray]="showColumnGroupArray"
+
+             [dndDraggable]="stopInfo"
+             dndEffectAllowed="copyMove"
+             (dndMoved)="onDragged(stopInfo, routeInfo)"
+             (onChangeActivity)="changeActivity($event)"
+             (onChangePhase)="changePhase($event)"
+             (onMoveStopToOtherRoute)="moveStopToOtherRoute($event)"
+             (onInitToolView)="initToolView($event)"
+             (onInitToolForPlan)="initToolForPlan($event)"
+             (onInitToolRoutePlanner)="initRoutePlanner($event)"
+      >
+
+        </div>
+
+      </div>
+      <div [ngClass]="['table-end']">
+        <span [ngClass]="['time']">{{routeInfo.endTime}}</span>
+        <span [ngClass]="['title']">
+          <i [ngClass]="['point']"></i>
+          {{"End Point"}}
+          <i [ngClass]="['fa', 'fa-pencil-square-o']" alt="Change End Point" (click)="changeStartPoint(routeInfo,1)"></i>
+        </span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</div>

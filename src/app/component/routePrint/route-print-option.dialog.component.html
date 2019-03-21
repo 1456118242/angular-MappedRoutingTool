@@ -1,0 +1,34 @@
+<div class="print-select-dialog">
+  <div class="vex-close" (click)="onClose()"></div>
+  <p class="title">{{"Print Select"}}</p>
+  <div>
+    <h4 class="selectbox-title">{{"Print Option"}}</h4>
+    <ul class="list-horizontal">
+      <li *ngFor="let option of printOptionList">
+        <label>
+          <input type="checkbox" [(ngModel)]="option.isSelected">{{option.selectName}}
+        </label>
+      </li>
+    </ul>
+    <ul class="list-vertical">
+      <div>
+        <li class="select-all">
+          <label>
+            <input type="checkbox" [(ngModel)]="selectAll" (change)="masterChange()">{{"Select All"}}
+          </label>
+        </li>
+        <li *ngFor="let cb of listelements" class="select-check">
+          <label>
+            <input type="checkbox" [(ngModel)]="cb.isSelected" (change)="cbChange()"/>{{cb.selectName}}
+          </label>
+        </li>
+      </div>
+    </ul>
+  </div>
+  <div class="btn-check text-right">
+    <button class="ews-dialog-button" (click)="onClose()">Cancel</button>
+    <button  class="ews-dialog-button" (click)="onOk()">Print</button>
+  </div>
+</div>
+
+

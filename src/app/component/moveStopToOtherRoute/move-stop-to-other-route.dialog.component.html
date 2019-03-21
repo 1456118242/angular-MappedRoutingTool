@@ -1,0 +1,29 @@
+<div class="">
+    <p class="title">
+        {{"Move To Other Route"}}
+    </p>
+    <div
+            class="vex-close ng-star-inserted"
+            (click)="closeDialog()"
+    >
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" >
+        <thead>
+        <th>Stop</th>
+        <th>Phase</th>
+        <th>Change To</th>
+        </thead>
+        <tr>
+            <td>{{stopInfo.id}}</td>
+            <td>{{phaseFormat(stopInfo.phase) }}</td>
+            <td>
+                <select [(ngModel)]="routeInfo.routeID">
+                    <option [ngValue]="route.RouteID"  *ngFor="let route of tmpRouteList">{{route.Route}}</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <div class="btn-check text-right">
+        <button class="ews-dialog-button" (click)="combineStopAction()">OK</button>
+    </div>
+</div>

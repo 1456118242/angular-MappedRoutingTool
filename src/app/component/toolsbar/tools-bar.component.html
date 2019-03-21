@@ -1,0 +1,48 @@
+<div class="toolsbar" style="width: 110px; z-index: 100; top: 66px;">
+  <header>
+    <p style="width: 30px;height: 15px;margin-left:78px" [ngSwitch]="isShowToolsBar_v" (click)="isShowToolsBar_v = !isShowToolsBar_v">
+      <img style="width:10px;padding-left: 20px;padding-bottom: 7px" *ngSwitchCase="true" src="images/expandmappanel.png" alt=""  />
+      <img style="width:10px;padding-left: 20px;padding-bottom: 7px" *ngSwitchCase="false"  src="images/shrinkmappanel.png" alt=""  />
+    </p>
+  </header>
+  <div [style.display]="isShowToolsBar_v?'none':''">
+    <section>
+      <div class="center-block">
+        <button title="{{'Select Stops'}}"   [class.control-panel-selected]="isSelectedStyle_v == 1" (click)="selectMarkersByRect()"><img src="images/select2.png" alt=""/></button>
+        <button title="{{'Move Map'}}" [class.control-panel-selected]="isSelectedStyle_v == 0" (click)="moveMap()"><img src="images/drag.png" alt=""/></button>
+        <button title="{{'Select Stops'}}" [class.control-panel-selected]="isSelectedStyle_v == 2"  (click)="selectMarkersByCustomPolygon()"><img src="images/select.png" alt=""/></button>
+        <button (click)="unselect()" title="{{'De-select'}}"><img src="images/unselect.png" alt=""/></button>
+        <button (click)="resetMapCenter()" title="{{'Fit to screen'}}"><img src="images/Fit-to-Screen.png" alt=""/></button>
+      </div>
+    </section>
+    <section>
+      <div class="center-block" [ngSwitch]="isSelectAllRouteInfo">
+        <label class="slidelabel">{{"All Routes"}}</label>
+        <div class="" *ngSwitchCase="true" title="{{'Hide All Routes'}}" (click)="hideOrShowAllRouteList()">
+          <img src="images/showline.png" alt=""/>
+        </div>
+        <div class="" *ngSwitchCase="false" title="{{'Show All Routes'}}" (click)="hideOrShowAllRouteList()">
+          <img src="images/hideline.png" alt=""/>
+        </div>
+
+      </div>
+    </section>
+    <section>
+      <div class="center-block" [ngSwitch]="isDrawRoutesByManual?false:isDrawRouteline">
+        <label class="slidelabel">{{"Route Lines"}}</label>
+        <div class="" *ngSwitchCase="true" title="{{'Hide Route Lines'}}" (click)="hideOrShowAllRouteLineList()">
+          <img src="images/showline.png" alt=""/>
+        </div>
+        <div class="" *ngSwitchCase="false" title="{{'Show Route Lines'}}" (click)="hideOrShowAllRouteLineList()">
+          <img src="images/hideline.png" alt=""/>
+        </div>
+      </div>
+    </section>
+    <ng-content select="[name=mappedRouting]">
+
+    </ng-content>
+    <ng-content select="[name=routePlanner]">
+
+    </ng-content>
+  </div>
+</div>

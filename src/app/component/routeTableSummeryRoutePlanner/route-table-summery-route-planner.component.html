@@ -1,0 +1,161 @@
+<div class="table-group" id="route-list" style="background: #fff;" style="overflow-x: scroll">
+  <img src="./images/TreeButtonUp.gif"
+       style=" padding-top: 5px;padding-left: 10px;"
+          (click)="isExpand_v = !isExpand_v"
+          *ngIf="!isExpand_v"/>
+  <table cellpadding="0" class="Table Fixed" width="100%" cellspacing="0" width="100%" [style.display]="isExpand_v ? '':'none'">
+    <thead>
+    <tr>
+      <th class="Parent"><img src="./images/TreeButtonDown.gif" (click)="isExpand_v = !isExpand_v"/></th>
+      <th class="Parent"></th>
+      <th class="Parent"></th>
+      <th class="Parent"></th>
+      <th class="Parent"></th>
+      <th class="Parent"></th>
+      <ng-container
+              *ngFor="let customColumn of (rootData.routeInfos ? rootData.routeInfos[0].customColumns: []);let i = index">
+        <th
+                [style.display]="rootData.isShowTimeline ?'none':''"
+                [style.text-align]="i<4 ? 'left' : 'right'"
+                [ngStyle]="customColumn.field == 'Stops' ? {'white-space': 'normal','width': '72px','min-width':'72px','max-width':'72px'}:''"
+                *ngIf="customColumn.isShowInRouteSummary"
+                class="Parent"
+        >
+          {{customColumn.displayText}}
+        </th>
+      </ng-container>
+
+      <!--<td style="text-align: right;" ng-hide="rootjson.isShowTimeline">{{"Weight" | translate}}</td>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+
+    </tr>
+    <ng-container *ngFor="let routeItem of routePlannerTableData;let i =index">
+      <tr>
+        <td><input type="checkbox" (change)="selectAllRouteByNum(routeItem,routeNumSelectState[i]) " [(ngModel)]="routeNumSelectState[i]" [checked]="isRoutesSelect(routeItem,i)"/></td>
+        <td colspan="5"><i [ngClass]="{true:'fa fa-eye',false:'fa fa-eye-slash'}[routeNumShowInMapState[i]]" (click)="showOrHideRouteByNum(routeItem,i)" ></i></td>
+        <td [attr.colspan]="routNumWidth" style="text-align: left">RouteNum:{{routeItem.routeNum}}</td>
+        <ng-container *ngFor="let column of routeItem.columns;">
+          <td
+                  *ngIf="column.isShowInRouteSummary"
+                  style="text-align: right;"
+          >
+            {{ column.value }}
+          </td>
+        </ng-container>
+      </tr>
+      <tr *ngFor="let route of routeItem.routeInfos">
+        <td>
+          <input type="checkbox" [(ngModel)]="route.isSelected" (click)="showOrHideRouteInfo(route)">
+        </td>
+        <!--<td  ng-click="hideOrShowRouteHandler(route)" ng-title="{true:'aaaa',false:'bbbb'}[route.isShowRouteOnMap]"><i ng-class="{true:'fa fa-eye',false:'fa fa-eye-slash'}[route.isShowRouteOnMap]" ></i></td>-->
+        <td (click)="hideOrShowRouteOnMapHandler(route,routeItem,i)"><i [ngClass]="{true:'fa fa-eye',false:'fa fa-eye-slash'}[route.isShowOnMap]" ></i></td>
+        <td (click)="setThisRouteCenter(route)" title="{{'Center'}}"><i class="fa fa-align-center"></i></td>
+        <td (click)="addScheduledStops(route)" title="{{'Add Scheduled Stops'}}"><i class="fa fa-plus-circle"></i></td>
+        <td (click)="editRouteHandler(route.id)" title="{{'Edit Route'}}"><i class="fa fa-pencil-square-o"></i></td>
+        <td (click)="deleteRouteHandler(route.id)" title="{{'Delete Route'}}"><i class="fa fa-times"></i></td>
+        <ng-container *ngFor="let customColumn of route.customColumns;trackBy: trackByCustomColumns;let i = index">
+          <td style="text-align: left;" [ngSwitch]="rootData.isShowMoveToThisLoadSheet" *ngIf="i==0&&route.customColumns[0].isShowInRouteSummary">
+            <p style="text-align: left;"  *ngSwitchCase=false>{{route.routeName}}</p>
+
+            <a *ngSwitchCase=true style="color: #3d5f7a;cursor: pointer;" (click)="MoveToThisLoadSheet(route)">{{route.routeName}}</a>
+          </td>
+          <td style="text-align: left;" *ngIf="i==1&&route.customColumns[1].isShowInRouteSummary">
+            <ng-select
+                    [items]="colors"
+                    bindLabel="label"
+                    [dropdownPosition]="'down'"
+                    bindValue="value"
+                    [(ngModel)]="route.color"
+                    style="width: 150px !important;"
+                    [ngStyle]="{color: '#'+route.color}"
+                    (open)="onFocus($event)"
+                    (close)="onBlur($event)"
+                    (change)="changeRouteColorHandler(route)"
+            >
+              <ng-template ng-label-tmp let-item="item">
+                     <span [ngStyle]="{background: '#'+item.value}"
+                           style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" >
+                <span [ngStyle]="{background: '#'+item.value}"
+                      style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+              </ng-template>
+
+            </ng-select>
+          </td>
+          <td style="text-align: left;" *ngIf="i==2&&route.customColumns[2].isShowInRouteSummary">
+            <ng-select
+                    [items]="deliverymanBuffer"
+                    [dropdownPosition]="'down'"
+                    bindLabel="label"
+                    bindValue="value"
+                    style="width: 140px !important;"
+                    (open)="onFocus($event)"
+                    (close)="onBlur($event)"
+                    [(ngModel)]="route.deliveryman"
+                    [typeahead]="deliverymanTypeahead"
+            >
+            </ng-select>
+          </td>
+          <td style="text-align: left;" *ngIf="i==3&&route.customColumns[3].isShowInRouteSummary">
+            <ng-select
+                    [items]="arrayActivity"
+                    [dropdownPosition]="'down'"
+                    bindLabel="Activity"
+                    (open)="onFocus($event)"
+                    (close)="onBlur($event)"
+                    (change)="onActivityChange(route)"
+                    bindValue="Activity"
+                    style="width: 140px !important;"
+                    [(ngModel)]="route.activity"
+            >
+            </ng-select>
+          </td>
+          <td style="text-align: right;" *ngIf="customColumn.type == 'text' && customColumn.isShowInRouteSummary">
+            {{ customColumn.value }}
+          </td>
+        </ng-container>
+        <!--<td ng-hide="rootjson.isShowTimeline">-->
+        <!--<input type="checkbox"  ng-model="route.Helper"  ng-change="helperChangedHandler(route)"/>-->
+        <!--</td>-->
+        <!--<td ng-hide="rootjson.isShowTimeline"><a ng-click="sendMessageHandler(route)" href="#">{{"Send" | translate}}</a></td>-->
+
+
+      </tr>
+    </ng-container>
+    <tr>
+      <td><img src="./images/TreeButtonDown.gif"  (click)="isExpand_v = !isExpand_v"/></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+
+      <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[0]: []:[]).isShowInRouteSummary"></td>
+      <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[1]: []:[]).isShowInRouteSummary"></td>
+      <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[2]: []:[]).isShowInRouteSummary"></td>
+      <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[3]: []:[]).isShowInRouteSummary"></td>
+
+      <ng-container *ngFor="let sumOfCustomColumn of rootData.sumOfCustomColumns;let i = index;">
+        <td
+                style="text-align: right;"
+                *ngIf="rootData.routeInfos[0].customColumns[i+4].isShowInRouteSummary"
+        >
+
+          {{ sumOfCustomColumn.value }}
+        </td>
+      </ng-container>
+    </tr>
+    </tbody>
+  </table>
+  <style>
+    .SelectField:not(.MultiSelect):after{
+      display: none !important;
+    }
+  </style>
+</div>

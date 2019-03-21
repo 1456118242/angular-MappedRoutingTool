@@ -1,0 +1,16 @@
+<div class="btn-group" id="btn-group">
+  <button (click)="selectRoutesHander()">{{"Select Routes"}}</button>
+  <button (click)="deselectRouteHandler()">{{"Deselect Routes"}}</button>
+  <button (click)="addRouteHandler()">{{"Add Routes"}}</button>
+  <button (click)="saveChangesHandler()">{{"Save Changes"}}</button>
+  <button (click)="openOptimizeRoute()">{{"Optimize Routes"}}</button>
+  <button (click)="printHandler()">{{"Print"}}</button>
+  <button (click)="printSummaryHandler()">{{"Print Summary"}}</button>
+  <button (click)="openMapView()" >{{IsMultiWidow?'Single-Window':'Multi-Window'}}</button>
+  <button (click)="selectColumns()">{{'Select Columns'}}</button>
+  <phase-select-panel
+          [currentShowPhase_v]="currentPhase"
+          (onChangePhase)="changePhase($event)"
+  >
+  </phase-select-panel>
+</div>

@@ -1,0 +1,99 @@
+<div (window:beforeunload)="beforeunloadHandler($event)" (window:onunload)="onunloadHandler($event)">
+<div class="btn-group" id="btn-group">
+    <route-buttons-bar-route-planner
+            [currentPhase]="currrentPhase"
+            (onSelectRoutes)="selectRoutes()"
+            (onDeselectRoute)="deselectRoute()"
+            (onAddRoute)="addRoute()"
+            (onChangePhase)="changePhaseByPanel($event)"
+            (onPrint)="print()"
+            (onPrintSummary)="printSummary()"
+            (onOpenOptimizeRoute)="openOptimizeRoute()"
+            (onSaveChanges)="saveChanges()"
+            (onOpenMapView)="openOtherWindow($event)"
+            (onSelectColumns)="selectColumns()"
+    >
+    </route-buttons-bar-route-planner>
+</div>
+
+<route-table-summery-route-planner
+        [arrayActivity]="arrayActivity"
+        [rootData]="rootData_v"
+        [arrayDeliveryman]="deliverymanList_v"
+        (onDeleteRoute)="deleteRoute($event)"
+        (onChangeRouteInfoSelectStatus)="changeRouteInfoSelectStatus()"
+        (onChangeRouteOnMapStatus)="changeRouteOnMapStatus($event)"
+        (onSetThisRouteCenter)="setThisRouteCenter($event)"
+        (onAddScheduledEvents)="addScheduleEvent($event)"
+        (onEditRouteHander)="editRoute($event)"
+        (onChangeRouteColor)="changeRouteColorHandler($event)"
+        (onMoveToThisLoadSheet)="moveToThisLoadSheet($event)"
+        (onActivityChangeEmitter)="onActivityChange($event)"
+>
+
+</route-table-summery-route-planner>
+<div [ngClass]="['map-wrapper']">
+    <div [ngClass]="['routelist-content']">
+        <route-info
+                *ngFor="let routeInfo of rootData_v.routeInfos;trackBy:trackByRouteInfo;"
+                [routeInfo]="routeInfo"
+                [linearUnitOfMeasure]="linearUnitOfMeasure_v"
+                [showColumnGroupArray]="showColumnGroupArray_v"
+                (onChangeRouteInfoSelectStatus)="changeRouteInfoSelectStatus()"
+                [columnOptionDropDownMenuTemplate]="columnOptionDropDownMenuTemplate"
+                (onInitRoutePlannerView)="initRoutePlanner($event)"
+                (ongeocodeStop)="geocodeStop($event)"
+                (onChangePoint)="changePoint($event)"
+                (onDeletePlan)="deleteEvent($event)"
+                (onChangeActivity)="changeActivity($event)"
+                (onChangePhase)="changePhase($event)"
+                (onMoveFromRouteInfo)="moveFromRouteInfoCallback($event)"
+                (onDropToRouteInfo)="dropToRouteInfoCallback($event)"
+                (onReSequence)="reSequenceHandler($event)"
+                (onChangeColumn)="changeColumn($event)"
+                (onChangeRouteInfoStartTime)="changeRouteInfoStartTime($event)"
+                (onClickCustomerInfo)="clickCustomerInfo($event)"
+        ></route-info>
+    </div>
+
+    <tools-bar
+            [isDrawRoutesByManual]="isDrawRoutesByManual"
+            [isSelectAllRouteInfo]="rootData_v.isSelectAllRouteInfo"
+            [isDrawRouteline]="rootData_v.isDrawRouteline"
+            (onSelectMarkersOnMapByRect)="selectMarkersOnMapByRectCallback()"
+            (onSelectMarkersOnMapByCustomPolygon)="selectMarkersOnMapByCaustomPolygonCallback()"
+            (onChangeMapModeToMove)="changeMapModeToMoveCallback()"
+            (onUnSelectMarkersOnMap)="unSelectMarkersOnMapCallback()"
+            (onSetMapCenter)="setMapCenterCallback()"
+            (onExpandOrShrinkAllRouteInfo)="expandOrShrinkAllRouteInfo($event)"
+            (onShowOrHideRouteLineOnMap)="showOrHideRouteLineOnMap($event)"
+    >
+        <section name="routePlanner" >
+            <div  class="center-block" style="width:100px" >
+                <label class="slidelabel"  title="Pick Type">Pick Type</label>
+                <ul class="checklist">
+                    <li  style="white-space: nowrap;text-overflow: ellipsis;overflow:hidden" *ngFor="let fieldValueObj of rootData_v.salesColumnGroupNameFieldValueObjectArray;">
+                        <label *ngIf="fieldValueObj.isShow">
+                            <input
+                                    type="checkbox"
+                                    [ngModel]="fieldValueObj.value" (click)="changeSalesColumnGroupNameFieldValueObjectArray(fieldValueObj.field)"/>{{fieldValueObj.field}}
+                        </label>
+                    </li>
+                </ul>
+
+            </div>
+        </section>
+    </tools-bar>
+    <div id="google-map" [ngStyle]="{height: '900px'}"></div>
+    <stop-summary-panel-on-map
+            (onEditGeocode)="geocodeStopOnMap($event)"
+            *ngIf="rootData_v.isShowStopSummaryOnMap"
+            [stopSummaryPanelOnMap]="rootData_v.currentShowStopSummaryOnMapObj"></stop-summary-panel-on-map>
+    <route-summary-panel-on-map
+            *ngIf="rootData_v.isShowRouteSummaryOnMap"
+            [routeSummaryPanelOnMap]="rootData_v.currentShowRouteSummaryOnMapObj"
+    ></route-summary-panel-on-map>
+</div>
+
+<loading></loading>
+</div>

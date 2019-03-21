@@ -1,0 +1,42 @@
+{
+  "name": "routing-map",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --sourcemaps=true --prod --output-hashing=false --extract-css=false",
+    "watch": "ng build --sourcemaps=true -w --output-hashing=false"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^5.2.0",
+    "@angular/compiler": "^5.2.0",
+    "@angular/core": "^5.2.0",
+    "@angular/forms": "^5.2.0",
+    "@angular/http": "^5.2.0",
+    "@angular/platform-browser": "^5.2.0",
+    "@angular/platform-browser-dynamic": "^5.2.0",
+    "@angular/router": "^5.2.0",
+    "@ng-select/ng-select": "^1.4.1",
+    "@rars/ngx-webstorage": "^3.0.0",
+    "@types/googlemaps": "^3.30.7",
+    "@types/lodash": "^4.14.112",
+    "core-js": "^2.4.1",
+    "jw-angular-pagination": "^1.0.5",
+    "lodash": "^4.17.10",
+    "mobile-drag-drop": "^2.3.0-rc.1",
+    "mydatepicker": "^2.6.3",
+    "ng-http-interceptor": "^4.0.0",
+    "ngx-drag-drop": "^1.0.3",
+    "ngx-modialog": "^5.0.0",
+    "rxjs": "^5.5.6",
+    "zone.js": "^0.8.19"
+  },
+  "devDependencies": {
+    "@angular/cli": "~1.7.2",
+    "@angular/compiler-cli": "^5.2.0",
+    "@angular/language-service": "^5.2.0",
+    "typescript": "^2.5.2"
+  }
+}

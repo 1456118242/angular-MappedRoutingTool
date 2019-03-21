@@ -1,0 +1,60 @@
+<div id="printSummary">
+    <p class="title" style="font-size: 16px; margin-top: -10px;margin-bottom: 10px;text-align: center;font-weight: bold;">
+        Optimize Routes</p>
+    <table class="loadsheet-table" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;
+      border: none;
+      margin: 10px 0;
+      font-size: 14px;
+      width: 100%;">
+
+        <tr>
+            <td><input type="checkbox" [(ngModel)]="isAllFrom" (change)="onIsAllFrom()" /> From</td>
+            <td><input type="checkbox" [(ngModel)]="isAllTo" (change)="onIsAllTo()"/> To</td>
+            <td>Route</td>
+            <td>Stops</td>
+            <td>Max Number of Stops</td>
+            <td>Total Cases</td>
+            <td>Max Cases</td>
+            <td>Max Weight</td>
+        </tr>
+        <tr *ngFor="let routeInfo of routeInfos">
+            <td><input type="checkbox" [(ngModel)]="routeInfo.isFormState" /></td>
+            <td><input type="checkbox" [(ngModel)]="routeInfo.isToState" /></td>
+            <td style="text-align: left;">{{routeInfo.routeName}}</td>
+            <td style="text-align: right;">{{routeInfo.stopInfos.length}}</td>
+            <td><input type="number" [(ngModel)]="routeInfo.maxStopCount" (change)="changeStopCount()"></td>
+            <td style="text-align: right;">{{getTotal(routeInfo)}}</td>
+            <td><input type="number" [(ngModel)]="routeInfo.maxCases" (change)="changeMaxCases()"/></td>
+            <td style="text-align: right;">{{routeInfo.maxCargoWeight | number}}</td>
+        </tr>
+        <tr >
+            <td colspan="2">Total</td>
+            <td></td>
+            <td style="text-align: right;">{{TotalStops}}</td>
+            <td>{{TotalMaxStopNum}}</td>
+            <td style="text-align: right;">{{TotalCases}}</td>
+            <td>{{TotalMaxCases | number}}</td>
+            <td >{{TotalMaxWeight | number}}</td>
+        </tr>
+        <tr >
+            <td colspan="2">Re-Sequence</td>
+            <td>
+                <select  [(ngModel)]="selectedReSequence" (onchange)="onSelectReSequence()">
+                    <option *ngFor="let reSequence of reSequenceDropDownMenuTemplate.keyValues" value="{{reSequence.value}}" [style.display]="reSequence.value == 2 ? 'none': ''" >
+                        {{reSequence.field}}
+                    </option>
+                </select>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+    </table>
+</div>
+<div class="btn-check text-right">
+    <button class="ews-dialog-button" (click)="dialogClose()">Cancel</button>
+    <button  class="ews-dialog-button" (click)="Optimize()">Optimize</button>
+</div>

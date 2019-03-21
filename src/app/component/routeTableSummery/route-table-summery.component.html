@@ -1,0 +1,185 @@
+<div id="route-list" class="table-group">
+    <img src="./images/TreeButtonUp.gif"
+         style=" padding-top: 5px;padding-left: 10px;"
+         (click)="isExpand_v = !isExpand_v"
+         *ngIf="!isExpand_v">
+    <style>
+        .ng-select .ng-select-container {
+            color: #333;
+        }
+    </style>
+    <table border="0" class="Table Fixed" cellpadding="0" cellspacing="0" width="100%" [style.display]="isExpand_v ? '':'none'">
+        <thead>
+        <tr>
+            <th class="Parent"><img src="./images/TreeButtonDown.gif" (click)="isExpand_v = !isExpand_v"/></th>
+            <th class="Parent"></th>
+            <ng-container
+                    *ngFor="let customColumn of (rootData.routeInfos ? rootData.routeInfos[0].customColumns: []);let i = index">
+                <th
+                        [style.display]="showTableLineStr.indexOf(customColumn.field) != -1 ? customColumn.isShowInRouteSummary : rootData.isShowTimeline ?'none':''"
+                        [style.text-align]="i<4 ? 'left' : 'right'"
+                        [ngStyle]="customColumn.field == 'Stops' ? {'white-space': 'normal','width': '72px','min-width':'72px','max-width':'72px'}:''"
+                        *ngIf="customColumn.isShowInRouteSummary"
+                        class="Parent"
+                >
+                    {{customColumn.displayText}}
+                </th>
+            </ng-container>
+            <th *ngIf="rootData.isShowTimeline" class="Parent" style="text-align: left;padding-left:20px;white-space: normal; width: 72px; min-width: 72px; max-width: 72px;">
+                <div style="white-space: nowrap;">
+                    <div *ngFor="let headerObj of rootData.timelineHeaderObjList"
+                         [ngStyle]="{'width': headerObj.width+'px'}"
+                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;display: inline-block;"
+                         title="{{headerObj.hourText}}">
+                        |{{headerObj.hourText}}
+                    </div>
+                </div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let route of rootData.routeInfos;">
+            <td style="text-align: left">
+                <input type="checkbox" [ngModel]="route.isSelected" (click)="showOrHideRouteInfo(route)">
+            </td>
+            <td (click)="hideOrShowRouteOnMapHandler(route)"><i
+                    [ngClass]="{true:'fa fa-eye',false:'fa fa-eye-slash'}[route.isShowOnMap]"></i></td>
+            <ng-container *ngFor="let customColumn of route.customColumns;trackBy: trackByCustomColumns;let i = index">
+                <td style="text-align: left;" [ngSwitch]="rootData.isShowMoveToThisLoadSheet" *ngIf="i==0&&route.customColumns[0].isShowInRouteSummary">
+                    <p style="text-align: left;" *ngSwitchCase=false>{{route.routeName}}</p>
+
+                    <a *ngSwitchCase=true style="color: #3d5f7a;cursor: pointer;" (click)="MoveToThisLoadSheet(route)">{{route.routeName}}</a>
+                </td>
+                <td style="text-align: left;" *ngIf="i==1&&route.customColumns[1].isShowInRouteSummary">
+                    <ng-select
+                            [items]="colors"
+                            bindLabel="label"
+                            bindValue="value"
+                            [(ngModel)]="route.color"
+                            [dropdownPosition]="'down'"
+                            style="width: 150px !important;"
+                            (open)="onFocus($event)"
+                            (close)="onBlur($event)"
+                            [ngStyle]="{color: '#'+route.color}"
+                            (change)="changeRouteColorHandler(route)"
+                    >
+                        <ng-template ng-label-tmp let-item="item">
+                     <span [ngStyle]="{background: '#'+item.value}"
+                           style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                            <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                <span [ngStyle]="{background: '#'+item.value}"
+                      style="width: 15px;height: 15px;display: inline-block;vertical-align: middle;margin-right: 5px;"></span>
+                            <b [ngStyle]="{color: '#'+item.value}">{{item.label}}</b>
+                        </ng-template>
+
+                    </ng-select>
+
+                </td>
+                <td style="text-align: left;" *ngIf="i==2&&route.customColumns[2].isShowInRouteSummary">
+                    <ng-select
+                            [items]="deliverymanBuffer"
+                            bindLabel="label"
+                            bindValue="value"
+                            [dropdownPosition]="'down'"
+                            style="width: 140px !important;"
+                            (open)="onFocus($event)"
+                            (close)="onBlur($event)"
+                            [(ngModel)]="route.deliveryman"
+                            [typeahead]="deliverymanTypeahead"
+                    >
+                    </ng-select>
+                </td>
+                <td style="text-align: left;" *ngIf="i==3&&route.customColumns[3].isShowInRouteSummary">
+                    <ng-select
+                            [items]="vehicleBuffer"
+                            bindLabel="label"
+                            bindValue="value"
+                            [dropdownPosition]="'down'"
+                            style="width: 140px !important;"
+                            [disabled]="!route.isEditVehicle"
+                            disabled="true"
+                            (open)="onFocus($event)"
+                            (close)="onBlur($event)"
+                            [(ngModel)]="route.vehicleID"
+                            [typeahead]="vehicleTypeahead"
+                    >
+                    </ng-select>
+                </td>
+                <td
+                        style="text-align: right;"
+                        [style.display]="customColumn.field == 'Stops' ? customColumn.isShowInRouteSummary : rootData.isShowTimeline ?'none':''"
+                        *ngIf="customColumn.type == 'text' && customColumn.isShowInRouteSummary"
+                >
+                    {{ customColumn.value }}
+                </td>
+
+                <td  [style.display]="!rootData.isShowTimeline&&i==route.customColumns.length-2&&route.customColumns[route.customColumns.length-2].isShowInRouteSummary ?'':'none'" >
+                    <input type="checkbox" [(ngModel)]="route.helper" (change)="helperChangedHandler(route)"/>
+                </td>
+                <td  [style.display]="!rootData.isShowTimeline&&i==route.customColumns.length-1&&route.customColumns[route.customColumns.length-1].isShowInRouteSummary ?'':'none'"><a
+                        (click)="sendMessageHandler(route)" href="#">{{"Send"}}</a>
+                </td>
+            </ng-container>
+            <td *ngIf="rootData.isShowTimeline && route.stopInfos.length > 0"
+                style="padding-left: 0px; text-align: left;display: table-cell;">
+                <div class="TimelineParentDiv">
+                    <div style="overflow: visible;">
+                        <div *ngIf="route.timelineObj.isShow" [ngClass]="['StartStop']"
+                             [ngStyle]="{'margin-left': route.timelineObj.startPointOffsetLeft+'px'}"><span>S</span>
+                        </div>
+                        <div [ngClass]="['RailWay']"
+                             [ngStyle]="{'width': route.timelineObj.startTimeRailWayWidth+'px'}"></div>
+
+                        <div *ngFor="let timeline of route.timelineObj.timelineList" style="display: inline-block;">
+                            <div [ngClass]="['TimeLineStop']"
+                                 title=""
+                                 [ngStyle]="{'width':timeline.RectWidth+'px', 'border-color':timeline.RectBorderColor, 'background-color':timeline.RectFillColor}"
+                                 style="padding-left: 1px;">{{timeline.RectText}}
+                            </div>
+                            <div [ngClass]="['RailWay']" [ngStyle]="{'width':timeline.RailWayWidth+'px'}"
+                                 title=""></div>
+                        </div>
+
+                        <div [ngClass]="['RailWay']"
+                             [ngStyle]="{'width': route.timelineObj.endTimeRailWayWidth+'px'}"></div>
+                        <div *ngIf="['route.timelineObj.isShow']" [ngClass]="['EndStop']"><span>E</span></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: left"><img src="./images/TreeButtonDown.gif" (click)="isExpand_v = !isExpand_v" /></td>
+            <td></td>
+            <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[0]: []:[]).isShowInRouteSummary"></td>
+            <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[1]: []:[]).isShowInRouteSummary"></td>
+            <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[2]: []:[]).isShowInRouteSummary"></td>
+            <td *ngIf="(rootData.routeInfos ? rootData.routeInfos[0].customColumns ? rootData.routeInfos[0].customColumns[3]: []:[]).isShowInRouteSummary"></td>
+            <!--<td style="text-align: right;"-->
+                <!--#tool>-->
+                <!--{{ sumOfStopCount() }}-->
+            <!--</td>-->
+                    <ng-container *ngFor="let sumOfCustomColumn of rootData.sumOfCustomColumns;let i = index;" >
+                        <td
+                                style="text-align: right;"
+                                [style.display]="sumOfCustomColumn.field == 'Stops' ? sumOfCustomColumn.isShowInRouteSummary : rootData.isShowTimeline?'none':''"
+                                *ngIf="rootData.routeInfos[0].customColumns[i+4].isShowInRouteSummary"
+                        >
+                            {{ sumOfCustomColumn.value }}
+                        </td>
+                    </ng-container>
+            <td></td>
+            <td></td>
+
+        </tr>
+        </tbody>
+    </table>
+    <style>
+        .table-group {
+            background: #fff;
+        }
+    </style>
+
+
+</div>

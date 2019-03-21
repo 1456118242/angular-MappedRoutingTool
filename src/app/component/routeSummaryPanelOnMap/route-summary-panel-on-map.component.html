@@ -1,0 +1,12 @@
+
+<div [ngClass]="['markertip']" [ngStyle]="{'z-index':'999'}">
+  <p [ngStyle]="{'font-weight':'bold'}">{{routeSummaryPanelOnMap.routeName}}</p>
+  <p>{{routeSummaryPanelOnMap.deliveryman}}</p>
+  <p>{{"Stops"}}: {{routeSummaryPanelOnMap.stopCount}}</p>
+
+  <p><span *ngFor="let t of routeSummaryPanelOnMap.totalFieldValueObjects">{{t.field + " " + t.value + "  "}}</span></p>
+
+  <p>{{"Travel Time"}}: {{routeSummaryPanelOnMap.travelTime}}</p>
+  <p>{{"Service Time"}}: {{routeSummaryPanelOnMap.serviceTime}}</p>
+  <p>{{"Total Time"}}: {{routeSummaryPanelOnMap.totalTime}}</p>
+</div>

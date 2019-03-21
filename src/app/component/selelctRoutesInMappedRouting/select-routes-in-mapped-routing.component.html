@@ -1,0 +1,42 @@
+<div id="printSummary">
+    <p class="title" style="font-size: 16px; margin-top: -10px;margin-bottom: 10px;text-align: center;font-weight: bold;">
+        Select Routes</p>
+    <tr id="date" style="text-align: center"></tr>
+
+    <tr id="btn-addloadsheet">
+        <td colspan="100%" style="text-align: end">
+            <button class="ews-dialog-button" (click)="dialogClose()">Cancel</button>
+            <button class="ews-dialog-button" (click)="searchRoute()">Search</button>
+        </td>
+    </tr>
+    <table  class="Table Fixed" style="margin-top: 5px" cellpadding="0" cellspacing="0" width="100%">
+        <tr *ngIf="LoadSheets">
+            <th class="Parent"><input type="checkbox" (change)="selectAllRoute($event)" [(ngModel)]="isAll"></th>
+            <th class="Parent">Date</th>
+            <th class="Parent">Route Num</th>
+            <th class="Parent">Route</th>
+            <th class="Parent">Stops</th>
+            <th class="Parent">Total</th>
+
+        </tr>
+        <tr *ngFor="let LoadSheet of pageOfLoadSheet">
+            <td ><input #Id type="checkbox" [value]="LoadSheet.LoadSheetID" [(ngModel)]='LoadSheet.isChecked' (change)="isAllChecked()"/></td>
+            <td >{{LoadSheet.Date | date :'shortDate'}}</td>
+            <td style="text-align: right">{{LoadSheet.RouteNum}}</td>
+            <td >{{LoadSheet.Route}}</td>
+            <td >{{LoadSheet.stopCount}}</td>
+            <td >{{LoadSheet.TotalCases | number}}</td>
+        </tr>
+    </table>
+    <tr>
+        <td colspan="6" style="text-align: center">
+            <jw-pagination [items]="LoadSheets" (changePage)="onChangePage($event)"></jw-pagination>
+        </td>
+    </tr>
+    <tr *ngIf="LoadSheets">
+        <td colspan="100%" style="text-align: end">
+            <button class="ews-dialog-button" (click)="dialogClose()">Cancel</button>
+            <button class="ews-dialog-button" (click)="SelectRoute()">Save Changes & Select Routes</button>
+        </td>
+    </tr>
+</div>

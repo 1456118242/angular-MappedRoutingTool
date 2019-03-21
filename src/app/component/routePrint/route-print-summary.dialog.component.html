@@ -1,0 +1,91 @@
+<div id="printSummary">
+  <style>
+    .print-summary-dialog p.title {
+      font-size: 16px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .move-invoice-dialog select,
+    .print-summary-dialog select {
+      width: 100%;
+      border-radius: 3px;
+    }
+    .move-invoice-dialog table,
+    .print-summary-dialog table {
+      border-collapse: collapse;
+      border: none;
+      margin: 10px 0;
+      font-size: 14px;
+      width: 100%;
+    }
+    .move-invoice-dialog table tbody tr:hover,
+    .print-summary-dialog table tbody tr:hover {
+      background-color: #fff;
+    }
+    .move-invoice-dialog table thead,
+    .print-summary-dialog table thead {
+      width: 100%;
+      background: linear-gradient(to bottom, #fcfcfc 0%, #bebebe 100%);
+    }
+    .move-invoice-dialog table td,
+    .print-summary-dialog table td,
+    .move-invoice-dialog table th,
+    .print-summary-dialog table th {
+      text-align: center;
+      padding: 5px;
+      border: 1px solid #b0b1b1;
+    }
+  </style>
+  <p class="title" style="font-size: 16px; margin-top: -10px;margin-bottom: 10px;text-align: center;font-weight: bold;">
+    Print Summary</p>
+  <div class="vex-close" (click)="onClose()"></div>
+  <table class="Table Fixed" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;
+      border: none;
+      margin: 10px 0;
+      font-size: 14px;
+      width: 100%;">
+    <thead>
+    <ng-container *ngFor="let customColumn of (routeInfos ? routeInfos[0].customColumns: []);let i = index">
+    <th style="padding: 5px;
+      border: 1px solid #b0b1b1;"
+        [style.text-align]="i<4 ? 'left' : 'right'"
+        *ngIf="notShowFields.indexOf(customColumn.field) == -1 && customColumn.isShowInRouteSummary" class="Parent">
+      {{customColumn.displayText}}
+    </th>
+    </ng-container>
+    </thead>
+    <tbody>
+
+    <tr *ngFor="let route of routeInfos;">
+      <ng-container *ngFor="let customColumn of route.customColumns; let i =index">
+      <td style="padding: 5px;
+      border: 1px solid #b0b1b1;" [style.text-align]="i<4 ? 'left' : 'right'" *ngIf="notShowFields.indexOf(customColumn.field) == -1 && customColumn.isShowInRouteSummary">{{customColumn.value}}
+      </td>
+      </ng-container>
+    </tr>
+    </tbody>
+    <tfoot>
+    <td [attr.colspan]="routeInfos[0].customColumns[2].isShowInRouteSummary?2:1" style="text-align: center;
+      padding: 5px;
+      border: 1px solid #b0b1b1;">Total</td>
+    <ng-container *ngFor="let sumOfCustomColumn of rootData.sumOfCustomColumns;let i = index">
+      <td
+              style="text-align: right;
+      padding: 5px;
+      border: 1px solid #b0b1b1;"
+              *ngIf="rootData.routeInfos[0].customColumns[i+4].isShowInRouteSummary"
+      >
+        {{ sumOfCustomColumn.value }}
+      </td>
+    </ng-container>
+    </tfoot>
+  </table>
+</div>
+<div class="btn-check text-right">
+  <button  class="ews-dialog-button" (click)="onClose()">Cancel</button>
+  <button  class="ews-dialog-button" (click)="onOk()">Print</button>
+</div>
+
+

@@ -1,0 +1,160 @@
+<div class="print-dialog ">
+    <div class="btn-check text-right">
+        <button class="ews-dialog-button" (click)="closeThisDialog()">Cancel</button>
+        <button class="ews-dialog-button" (click)="printHandler()">Print</button>
+    </div>
+    <p class="title">{{"Print"}}</p>
+    <div id="printDiv">
+        <style>
+            .move-invoice-dialog .list-vertical .select-all,
+            .print-summary-dialog .list-vertical .select-all,
+            .print-select-dialog .list-vertical .select-all,
+            .print-dialog .list-vertical .select-all {
+                font-weight: bolder;
+                font-size: 16px;
+            }
+            .move-invoice-dialog .list-vertical .select-check,
+            .print-summary-dialog .list-vertical .select-check,
+            .print-select-dialog .list-vertical .select-check,
+            .print-dialog .list-vertical .select-check {
+                margin-left: 20px;
+            }
+            .move-invoice-dialog p.title,
+            .print-summary-dialog p.title,
+            .print-select-dialog p.title,
+            .print-dialog p.title {
+                font-size: 16px;
+                margin-top: -10px;
+                margin-bottom: 10px;
+                text-align: center;
+                font-weight: bold;
+            }
+            .move-invoice-dialog select,
+            .print-summary-dialog select,
+            .print-select-dialog select,
+            .print-dialog select {
+                width: 100%;
+                border-radius: 3px;
+            }
+            .move-invoice-dialog table,
+            .print-summary-dialog table,
+            .print-select-dialog table,
+            .print-dialog table {
+                border-collapse: collapse;
+                border: none;
+                margin: 10px 0;
+                font-size: 14px;
+                width: 100%;
+            }
+            .move-invoice-dialog table tbody tr:hover,
+            .print-summary-dialog table tbody tr:hover,
+            .print-select-dialog table tbody tr:hover,
+            .print-dialog table tbody tr:hover {
+                background-color: #fff;
+            }
+            .move-invoice-dialog table thead,
+            .print-summary-dialog table thead,
+            .print-select-dialog table thead,
+            .print-dialog table thead {
+                width: 100%;
+                background: linear-gradient(to bottom, #fcfcfc 0%, #bebebe 100%);
+            }
+            .move-invoice-dialog table td,
+            .print-summary-dialog table td,
+            .print-select-dialog table td,
+            .print-dialog table td,
+            .move-invoice-dialog table th,
+            .print-summary-dialog table th,
+            .print-select-dialog table th,
+            .print-dialog table th {
+                text-align: center;
+                padding: 5px;
+                border: 1px solid #b0b1b1;
+            }
+        </style>
+        <div class="mapwrapper" id="print-map" *ngIf="printOptionList[2].isSelected" style="height:400px">map
+        </div>
+        <img id="google-map-image" style="display: none;"/>
+        <div *ngIf="printOptionList[0].isSelected" id="column-option">
+            <div style="background: linear-gradient(to bottom, #fcfcfc 0%, #bebebe 100%)">Column</div>
+            <label *ngFor="let key of objectKeys(showColumnOption)">
+                <input type="checkbox" [(ngModel)]="showColumnOption[key].isShow"/>{{showColumnOption[key].columnName}}
+            </label>
+        </div>
+        <div class="print-dialog">
+            <div *ngIf="printOptionList[0].isSelected">
+                <ng-container *ngFor="let element of listelements" >
+                    <div style="margin-bottom: -10px;background: linear-gradient(to bottom, #fcfcfc 0%, #bebebe 100%);text-align: center;border: 1px solid #b0b1b1;height: 28px;line-height: 28px;">
+                        {{element.route.routeName}}
+                    </div>
+                    <table cellpadding="0" cellspacing="0" class="Table Fixed" width="100%" *ngIf="element.isSelected" style="border: none;margin: 10px 0;border-collapse: collapse;width: 100%;border: 1px solid #b0b1b1;">
+                        <thead>
+                        <tr>  <th style="text-align: center">{{"Sequence"}}</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.StopName.isShow">{{"Stop Name"}}</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Phase.isShow">Phase</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.StopsperWeek.isShow">Stops per Week</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.CasesperStop.isShow">Cases per Stop</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.CustomerID.isShow">CustomerID</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.ShortName.isShow">Short Name</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.City.isShow">City</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.State.isShow">State</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Company.isShow">Company</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Address.isShow">Address</th>
+                            <th style="text-align: center;border: 1px solid #b0b1b1" *ngIf="showColumnOption.PostalCode.isShow">Postal Code</th>
+                            <ng-container *ngFor="let salesColumn of salesColumnGroupName  ">
+                                <th style="text-align: right;border: 1px solid #b0b1b1;padding: 5px;" *ngIf="showColumnOption[salesColumn].isShow" >{{salesColumn}}</th>
+                            </ng-container>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr *ngFor="let stop of element.route.stopInfos ">
+                            <td style="text-align: right;border: 1px solid #b0b1b1">{{stop.imageIndex}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.StopName.isShow">{{stop.userName}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Phase.isShow">{{stop.phase | phaseFormat}}</td>
+                            <td style="text-align: right;border: 1px solid #b0b1b1" *ngIf="showColumnOption.StopsperWeek.isShow">{{stop.stopsPerWeek | stopsPerWeekFormat}}</td>
+                            <td style="text-align: right;border: 1px solid #b0b1b1" *ngIf="showColumnOption.CasesperStop.isShow">{{stop.cases | number}}</td>
+                            <td style="text-align: right;border: 1px solid #b0b1b1" *ngIf="showColumnOption.CustomerID.isShow">{{stop.customerID}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.ShortName.isShow">{{stop.userName}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.City.isShow">{{stop.city}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.State.isShow">{{stop.state}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Company.isShow">{{stop.company}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.Address.isShow">{{stop.address}}</td>
+                            <td style="text-align: left;border: 1px solid #b0b1b1" *ngIf="showColumnOption.PostalCode.isShow">{{stop.postalCode}}</td>
+                            <ng-container *ngFor="let salesColumn of salesColumnGroupName ">
+                                <td style="text-align: right;border: 1px solid #b0b1b1;padding: 5px;" *ngIf="showColumnOption[salesColumn].isShow">{{stop[salesColumn]}}</td>
+                            </ng-container>
+                        </tr>
+                        </tbody>
+
+                        <tfoot>
+                        <td  style="text-align:center;border: 1px solid #b0b1b1;padding: 5px;">{{"Total"}}</td>
+                        <td *ngIf="showColumnOption.StopName.isShow"></td>
+                        <td *ngIf="showColumnOption.Phase.isShow"></td>
+                        <td style="text-align: right" *ngIf="showColumnOption.StopsperWeek.isShow">{{element.route.stopInfos | calculateSumOfStopsPerWeek}}</td>
+                        <td style="text-align: right" *ngIf="showColumnOption.CasesperStop.isShow">{{element.route.stopInfos | calculateSumOfCase}}</td>
+                        <td *ngIf="showColumnOption.CustomerID.isShow"></td>
+                        <td *ngIf="showColumnOption.ShortName.isShow"></td>
+                        <td *ngIf="showColumnOption.City.isShow"></td>
+                        <td *ngIf="showColumnOption.State.isShow"></td>
+                        <td *ngIf="showColumnOption.Company.isShow"></td>
+                        <td *ngIf="showColumnOption.Address.isShow"></td>
+                        <td *ngIf="showColumnOption.PostalCode.isShow"></td>
+                        <ng-container *ngFor="let salesColumn of rootData.sumOfCustomColumns  ">
+                        <th style="text-align: right" *ngIf="showColumnOption[salesColumn.displayText]?showColumnOption[salesColumn.displayText].isShow:false">
+                            {{salesColumn.value}}
+                        </th>
+                        </ng-container>
+                        </tfoot>
+                    </table>
+                </ng-container>
+            </div>
+            <ng-container  *ngFor="let obj of instructionObjList">
+                <div *ngIf="printOptionList[1].isSelected">
+                    <div style="font-weight:bold;text-align: center;">{{obj.title}}</div>
+                    <div [innerHTML]="obj.instructionsStr"></div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

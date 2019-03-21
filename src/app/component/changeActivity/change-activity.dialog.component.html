@@ -1,0 +1,33 @@
+<div class="">
+    <div
+            class="vex-close ng-star-inserted"
+            (click)="closeDialog()"
+    >
+
+    </div>
+    <p class="title">
+        {{"Change Activity"}}
+    </p>
+    <table>
+        <thead>
+        <th>Stop</th>
+        <th>Phase</th>
+        <th>Activity</th>
+        <th>Change To</th>
+        </thead>
+      <tr>
+          <td>{{stopInfo.id}}</td>
+          <td>{{stopInfo.phase}}</td>
+          <td>{{stopInfo.activity}}</td>
+          <td>
+              <select [(ngModel)]="activity">
+                  <option [ngValue]="activity.Activity" *ngFor="let activity of activityList" >{{activity.Activity}}</option>
+              </select>
+          </td>
+
+      </tr>
+    </table>
+    <div class="btn-check text-right">
+        <button class="ews-dialog-button" (click)="changeActivity()">OK</button>
+    </div>
+</div>

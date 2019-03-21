@@ -1,0 +1,70 @@
+<div>
+  <div [ngClass]="['stop-list']" (click)="clickCustomerInfoHandler(customerInfo)" [ngStyle]="{'background': customerInfo.isGrayColor ? '#ccc' : ''}">
+    <div *ngFor="let event of customerInfo.assignments" [ngStyle]="{'font-size': '10px', 'margin-left': '5px', 'background': 'linear-gradient(to right, Yellow 0%, #EBEBEC 60%)'}">
+      {{event.startTime}}-{{event.endTime}} (aaa)
+    </div>
+
+    <div>
+      <span [ngClass]="['time']">
+        <p [ngStyle]="{color:customerInfo.drivingTime.startTimeColor}">{{customerInfo.drivingTime.startTime}}</p>
+        <p [ngStyle]="{color:customerInfo.drivingTime.endTimeColor}">{{customerInfo.drivingTime.endTime}}</p>
+      </span>
+
+      <span [ngClass]="['title']" title="{{customerInfo.userName}}" [ngStyle]="{'width': '126px'}">
+                <i [ngClass]="['point']" *ngIf="!customerInfo.locked"  [ngStyle]="{'background': '#'+ routeInfo.color}"></i>
+                <b *ngIf="!customerInfo.locked" [ngStyle]="{'font-size':'18px', 'color': '#'+ routeInfo.color}">{{customerInfo.imageIndex}}</b>
+                <i [ngClass]="['point']" *ngIf="customerInfo.locked"  [ngStyle]="{'color': '#000', 'height': '16px','width': '16px','border-radius': 'unset','background-color':'#fff','background-image': 'url(images/IconSprite.png)','background-position': '-384px -64px'}"></i>
+                <b *ngIf="customerInfo.locked" [ngStyle]="{'font-size':'18px', 'color': '#'+ routeInfo.color}">{{customerInfo.imageIndex}}</b>
+                <i [ngStyle]="{'font-style':'normal'}">{{customerInfo.userName}}</i>
+
+               <p *ngIf="customerInfo.closestMatchingServiceWindow != null" [ngStyle]="{'color': customerInfo.closestMatchingServiceWindow.startTimeColor, 'overflow':'visible'}"
+                  class="title-time">{{customerInfo.closestMatchingServiceWindow.startTime + " - " + customerInfo.closestMatchingServiceWindow.endTime}}</p>
+      </span>
+
+      <span [ngStyle]="{'text-align': 'right'}" [ngClass]="['num']"  *ngFor="let n of showColumnGroupArray"
+
+            title = "{{n}}"
+      >
+            {{customerInfo[n] | number}}
+        </span>
+      <span style="padding-top: 0px;" #routePlanner>
+            <span #routePlanner style="height: 25px;" class="num" title="{{'Phase'}}">{{phaseFormat(customerInfo.phase)}}</span>
+            <span #routePlanner style="text-align: right; height: 25px;" class="stopslist-column"  title="{{customerInfo.customColumnFieldValueObj.field}}">{{customerInfo.customColumnFieldValueObj.value}}</span>
+            <p #routePlanner id="stop-{{customerInfo.id}}" ngClass="{hasRouteActivity: stop.StopActivity == ''}"  style="padding-left: 5px;">{{customerInfo.activity}}</p>
+        </span>
+      <span #toolForPlan style="text-align: right;" class="num" title="Activity">{{customerInfo.activity}}</span>
+      <span #tool class="stopslist-column"  title="{{customerInfo.customColumnFieldValueObj.field}}">{{customerInfo.customColumnFieldValueObj.value}}</span>
+    </div>
+
+
+    <div [ngClass]="['stop-info']" [style.display]="isShowCustomerDetail_v ? '':'none'">
+      <!--<p #routePlanner>-->
+        <!--<a (click)="moveStopToOtherRouteWindow(customerInfo,routeInfo)">{{"Move Stop To Other Route"}}</a>-->
+      <!--</p>-->
+      <p #routePlanner>
+        <a (click)="changePhaseWindow(customerInfo,routeInfo)">{{"Change Phase"}}</a>
+      </p>
+      <p #routePlanner>
+        <a (click)="changeActivityWindow(customerInfo)">{{"Change Activity"}}</a>
+      </p>
+      <p #routePlanner>
+        <a (click)="deleteEventHandler(customerInfo,routeInfo)">{{"Delete"}}</a>
+      </p>
+      <p #toolForPlan>
+        <a (click)="deleteEventHandler(customerInfo,routeInfo)">{{"Delete"}}</a>
+      </p>
+      <p>{{customerInfo.userName}} <a href="TableView.aspx?TableName=Customers&Search=%7CCustomerID%7E{{customerInfo.customerID}}%7EE%7C&SubTable=Stops&LinkField=CustomerID&SubLinkField=CustomerID"
+                                target="_blank">
+        {{customerInfo.customerID}}</a></p>
+      <p>{{customerInfo.company}}</p>
+      <p>{{customerInfo.address}}</p>
+      <p>{{customerInfo.address2}}</p>
+      <p>{{customerInfo.city + ", " + customerInfo.state + ", " + customerInfo.postalCode}}</p>
+      <p>
+        <a (click)="ongeocodeStop(customerInfo, routeInfo)">{{"Edit Geocode"}}</a>
+        <a #tool *ngIf="(customerInfo.invoices && (customerInfo.invoices.length > 1 || (customerInfo.invoices.length == 1 && customerInfo.invoices[0] != '')))"(click)="onmoveInvoice(customerInfo, routeInfo)" >{{"Move Invoice"}}</a>
+      </p>
+      <p *ngFor="let s of customerInfo.serviceWindows" >{{s.startTime + " - " + s.endTime}}</p>
+    </div>
+  </div>
+</div>

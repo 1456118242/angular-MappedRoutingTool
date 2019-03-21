@@ -1,0 +1,23 @@
+<div id="printSummary">
+  <p class="title" style="font-size: 16px; margin-top: -10px;margin-bottom: 10px;text-align: center;font-weight: bold;">
+    Select Table Columns</p>
+  <table style="display: inline-block" *ngFor="let noValue of groupCount; let i = index">
+    <ng-container *ngFor="let column of currentTableColumnsDisplayObjs;let j = index">
+      <tr *ngIf="j<=i*6+6 && i*6<j">
+        <td><input type="checkbox" [(ngModel)]="column.isShowInRouteSummary"/><span>{{column.displayText}}</span></td>
+      </tr>
+    </ng-container>
+  </table>
+  <table style="display: inline-block">
+    <ng-container *ngFor="let column of currentTableColumnsDisplayObjs;let j = index">
+      <tr *ngIf="j>groupCount.length*6">
+        <td><input type="checkbox" [(ngModel)]="column.isShowInRouteSummary"/><span>{{column.displayText}}</span></td>
+      </tr>
+    </ng-container>
+  </table>
+
+  <div class="btn-check text-right">
+      <button class="ActionButtonAttention" (click)="saveCustomColumns()">OK</button>
+      <button class="ews-dialog-button" (click)="closeThisDialog()">Cancel</button>
+  </div>
+</div>

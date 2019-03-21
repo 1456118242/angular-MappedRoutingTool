@@ -1,0 +1,14 @@
+<div style="height:120px;">
+    <h4 style="text-align:center;">Message</h4>
+    <div style="margin: 5px;">
+        <span>Route: {{routeInfo.routeName}}</span>
+    </div>
+    <div style="margin: 5px;">
+        <span>Route Start Time: {{routeInfo.startTime}}</span>
+    </div>
+
+    <div style="margin: 10px;" class="btn-check text-right">
+        <button class="ews-dialog-button" (click)="closeThisDialog()">Cancel</button>
+        <button class="ews-dialog-button" (click)="sendMessage()">Send</button>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div [ngClass]="['btn-group']">
+  <button type="button"
+          [ngClass]="['btn']"
+          (click)="clickHandler()">
+    {{dropDownMenuTemplate?.menuText}}
+  </button>
+
+  <button type="button"
+          [ngClass]="['btn', 'dropdown-toggle']"
+          [attr.aria-expanded]="isShowDropDownMenu_v"
+          (click)="toggleDropDownMenu();$event.stopPropagation();">
+    <span [ngClass]="['caret']"></span>
+
+  </button>
+
+  <ul [ngClass]="['dropdown-menu']" >
+    <li *ngFor="let keyValue of dropDownMenuTemplate?.keyValues" (click)="selectItemHandler(keyValue)">
+      <a >{{keyValue.isShow ? "*" : ""}} {{keyValue.field}}</a>
+    </li>
+  </ul>
+</div>

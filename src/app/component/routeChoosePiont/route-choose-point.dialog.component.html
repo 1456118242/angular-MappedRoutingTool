@@ -1,0 +1,11 @@
+<div class="edit-dialog">
+    <div class="vex-close" (click)="closeThisDialog()"></div>
+    <div *ngFor="let m of mapPoints">
+        <label> <input type="radio" name="mapPointRadio" [value]="m.MapPointID" [(ngModel)]="mapPointID"> {{m.MapPoint}} </label>
+    </div>
+
+    <div class="btn-check text-right">
+        <button  (click)="closeThisDialog()" class="ews-dialog-button">Cancel</button>
+        <button (click)="saveMapPointHandler()" class="ews-dialog-button" >Save</button>
+    </div>
+</div>

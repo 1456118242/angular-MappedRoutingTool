@@ -1,0 +1,23 @@
+
+<div [ngClass]="['markertip']" [ngStyle]="{'z-index':'999'}">
+  <p><a
+    [ngStyle]="{'font-weight':'bold','color':'blue'}"
+    href="TableView.aspx?TableName=Customers&Search=%7CCustomerID%7E{{stopSummaryPanelOnMap.customerID}}%7EE%7C&SubTable=Stops&LinkField=CustomerID&SubLinkField=CustomerID"
+        target="_blank">{{stopSummaryPanelOnMap.customerID}}</a><span>{{stopSummaryPanelOnMap.userName}}</span></p>
+  <p [ngStyle]="{'font-weight':'bold'}">{{stopSummaryPanelOnMap.company}}</p>
+  <p>{{stopSummaryPanelOnMap.address}}</p>
+  <p>{{stopSummaryPanelOnMap.address2}}</p>
+  <p><a [ngStyle]="{'font-weight':'bold', 'color':'blue'}" href="javascript:void(0);" (click)="editGeocodeHandler(stopSummaryPanelOnMap.id, stopSummaryPanelOnMap.parentID)">{{"Edit Geocode"}}</a></p>
+
+
+  <p *ngFor="let s of stopSummaryPanelOnMap.serviceTimes">Service: {{s.startTime + " - " + s.endTime}}</p>
+
+  <p [ngStyle]="{'font-weight':'bold'}">{{"Current Stop"}}</p>
+
+
+  <p><span *ngFor="let n of stopSummaryPanelOnMap.fieldValueObjects">{{n.field + " " + n.value + "  "}}</span></p>
+
+  <p [ngStyle]="{'font-weight':'bold'}">{{stopSummaryPanelOnMap.routeName}}</p>
+  <p><span *ngFor="let t of stopSummaryPanelOnMap.totalFieldValueObjects">{{t.field + " " + t.value + "  "}}</span></p>
+</div>
+

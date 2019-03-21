@@ -1,0 +1,76 @@
+<div (window:beforeunload)="beforeunloadHandler($event)" (window:onunload)="onunloadHandler($event)">
+<route-buttons-bar-for-plan
+     (onSaveChanges)="saveChange()"
+     (onAddPlan)="addPlan()"
+     (onReCalculate)="reCalculate()"
+     (onPrint)="printDialog()"
+     (onPrintSummary)="printSummary()"
+     (onBackOptimizerHandler)="backOptimizerHandler()"
+     (onOpenMapView)="openOtherWindow($event)"
+     (onSelectColumns)="selectColumns()"
+>
+</route-buttons-bar-for-plan>
+    <route-table-summery-for-plan
+            (onMoveToThisLoadSheet)="moveToThisLoadSheet($event)"
+            [arrayDeliveryman] ='deliverymanList_v'
+            [arrayVehicle]="arrayVehicle_v"
+            [rootData]="rootData_v"
+            (onChangeRouteInfoSelectStatus)="changeRouteInfoSelectStatus()"
+            (onChangeRouteOnMapStatus)="changeRouteOnMapStatusCallback($event)"
+            (onChangeRouteColor)="changeRouteColorCallback($event)"
+            (onInitToolForPlan)="initToolForPlan($event)"
+            (onAddScheduledEvents)="addScheduledEvents($event)"
+            (onDeletePlanHandler)="deletePlanHandler($event)"
+
+    >
+
+    </route-table-summery-for-plan>
+<div [ngClass]="['map-wrapper']">
+    <div [ngClass]="['routelist-content']">
+        <route-info
+                *ngFor="let routeInfo of rootData_v.routeInfos;trackBy:trackByRouteInfo;"
+                [routeInfo]="routeInfo"
+                [columnOptionDropDownMenuTemplate]="columnOptionDropDownMenuTemplate"
+                [linearUnitOfMeasure]="linearUnitOfMeasure_v"
+                [showColumnGroupArray]="showColumnGroupArray_v"
+                (onMoveFromRouteInfo)="moveFromRouteInfoCallback($event)"
+                (onDropToRouteInfo)="dropToRouteInfoCallback($event)"
+                (onReSequence)="reSequenceHandler($event)"
+                (onChangeRouteInfoSelectStatus)="changeRouteInfoSelectStatus()"
+                (onChangeColumn)="changeColumn($event)"
+                (onChangeRouteInfoStartTime)="changeRouteInfoStartTime($event)"
+                (onChangePoint)="changePoint($event)"
+                (ongeocodeStop)="geocodeStop($event)"
+                (onmoveInvoice)="moveInvoice($event)"
+                (onDeletePlan)="deletePlan($event)"
+                (onInitToolForPlanView)="initToolForPlan($event)"
+                (onClickCustomerInfo)="clickCustomerInfo($event)"
+        ></route-info>
+    </div>
+
+    <tools-bar
+            [isDrawRoutesByManual]="isDrawRoutesByManual"
+            [isSelectAllRouteInfo]="rootData_v.isSelectAllRouteInfo"
+            [isDrawRouteline]="rootData_v.isDrawRouteline"
+            (onSelectMarkersOnMapByRect)="selectMarkersOnMapByRectCallback()"
+            (onSelectMarkersOnMapByCustomPolygon)="selectMarkersOnMapByCaustomPolygonCallback()"
+            (onChangeMapModeToMove)="changeMapModeToMoveCallback()"
+            (onUnSelectMarkersOnMap)="unSelectMarkersOnMapCallback()"
+            (onSetMapCenter)="setMapCenterCallback()"
+            (onExpandOrShrinkAllRouteInfo)="expandOrShrinkAllRouteInfo($event)"
+            (onShowOrHideRouteLineOnMap)="showOrHideRouteLineOnMap($event)"
+    ></tools-bar>
+    <div id="google-map" [ngStyle]="{height: '900px'}"></div>
+    <stop-summary-panel-on-map
+            (onEditGeocode)="geocodeStopOnMap($event)"
+            *ngIf="rootData_v.isShowStopSummaryOnMap"
+            [stopSummaryPanelOnMap]="rootData_v.currentShowStopSummaryOnMapObj"></stop-summary-panel-on-map>
+    <route-summary-panel-on-map
+            *ngIf="rootData_v.isShowRouteSummaryOnMap"
+            [routeSummaryPanelOnMap]="rootData_v.currentShowRouteSummaryOnMapObj"
+    ></route-summary-panel-on-map>
+
+</div>
+    <loading></loading>
+
+</div>

@@ -1,0 +1,30 @@
+
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.all.value"
+           type="radio" (click)="changePhase(phaseType_v.all)"/> All
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.oneAndThree.value "
+           type="radio" (click)="changePhase(phaseType_v.oneAndThree)" /> 1 & 3
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.twoAndFour.value "
+           type="radio"  (click)="changePhase(phaseType_v.twoAndFour)" /> 2 & 4
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.oneOnly.value "
+           type="radio" (click)="changePhase(phaseType_v.oneOnly)" /> 1 only
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.twoOnly.value "
+           type="radio" (click)="changePhase(phaseType_v.twoOnly)" /> 2 only
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.threeOnly.value "
+           type="radio" (click)="changePhase(phaseType_v.threeOnly)" /> 3 only
+  </label>
+  <label>
+    <input name="phaseRadio"  [checked] = "currentShowPhase_v?.value == phaseType_v.fourOnly.value "
+           type="radio" (click)="changePhase(phaseType_v.fourOnly)" /> 4 only
+  </label>
+
